@@ -3,6 +3,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-parking_spots.pkl
+*.mp4
 .DS_Store
 .vscode/
