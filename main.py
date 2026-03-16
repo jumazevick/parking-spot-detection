@@ -1,6 +1,7 @@
 import cv2
 import pickle
 import os
+from detection.spot_detector import is_occupied
 
 # Global variables
 drawing = False
@@ -44,7 +45,7 @@ def main():
 
     cap.release()
 
-    # Create a window and set mouse callback
+    # Open a window of the first frame and set mouse callback
     cv2.namedWindow('Define Parking Spots')
     cv2.setMouseCallback('Define Parking Spots', draw_rectangle)
 
@@ -113,15 +114,9 @@ def detect_occupancy(video_path, spots):
 
             # Crop the spot
             spot_img = frame[y_min:y_max, x_min:x_max]
-            if spot_img.size == 0:
-                continue
 
-            # Convert to grayscale and check mean intensity
-            gray = cv2.cvtColor(spot_img, cv2.COLOR_BGR2GRAY)
-            mean_val = cv2.mean(gray)[0]
-
-            # Threshold: if mean intensity < 100, consider occupied (darker = vehicle)
-            occupied = mean_val < 100
+            # Determine if occupied using the detection module
+            occupied = is_occupied(spot_img)
             statuses.append(occupied)
             color = (0, 0, 255) if occupied else (0, 255, 0)  # Red for occupied, Green for free
 
